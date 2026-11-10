@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Professional Tizimli Jurnal</title>
+    <script src="https://telegram.org"></script>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #111111;
+            --field-bg: #f4f4f5;
+            --border-focus: #2383e2;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #121212;
+                --text-color: #ffffff;
+                --field-bg: #1e1e1e;
+                --border-focus: #2383e2;
+            }
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+        .app-title { font-size: 24px; font-weight: 700; margin-bottom: 5px; }
+        .app-subtitle { font-size: 13px; color: #888; margin-bottom: 25px; }
+        
+        .form-group { margin-bottom: 18px; }
+        .form-label { font-size: 12px; font-weight: 600; text-transform: uppercase; color: #888; display: block; margin-bottom: 6px; }
+        
+        .form-control {
+            width: 100%;
+            border: 1px solid transparent;
+            background-color: var(--field-bg);
+            color: var(--text-color);
+            padding: 14px;
+            font-size: 15px;
+            border-radius: 8px;
+            box-sizing: border-box;
+            outline: none;
+        }
+        .form-control:focus { border-color: var(--border-focus); }
+        
+        .action-btn {
+            width: 100%;
+            background-color: #2383e2;
+            color: white;
+            border: none;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        .action-btn:active { opacity: 0.9; }
+    </style>
+</head>
+<body>
+
+    <div class="app-title">📊 Moliyaviy Tizim</div>
+    <div class="app-subtitle">Operatsiyalar va bank manipulyatsiyalarini professional qayd etish interfeysi</div>
+
+    <div class="form-group">
+        <label class="form-label">Operatsiya Nomi / Sarlavha</label>
+        <input type="text" id="title" class="form-control" placeholder="Masalan: Kapitalbank tranzaksiya">
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Kategoriya / Turi</label>
+        <select id="category" class="form-control">
+            <option value="Xarajat">📉 Xarajat (Chiqim)</option>
+            <option value="Daromad">📈 Daromad (Kirim)</option>
+            <option value="Manipulyatsiya">🔄 Bank Manipulyatsiyasi</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Summa (UZS)</label>
+        <input type="number" id="amount" class="form-control" placeholder="0">
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Hisob / Bank</label>
+        <select id="bank_account" class="form-control">
+            <option value="Kapitalbank Visa/Uzcard">🏦 Kapitalbank</option>
+            <option value="Anorbank">📱 Anorbank</option>
+            <option value="Uzcard/Humo (Boshqa)">💳 Uzcard / Humo</option>
+            <option value="Naqd Pullar">💵 Naqd Hisob</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label class="form-label">Tafsilotlar / Izoh</label>
+        <textarea id="description" class="form-control" rows="3" placeholder="Operatsiya tafsilotlarini kiriting (ixtiyoriy)..."></textarea>
+    </div>
+
+    <button class="action-btn" onclick="executeSubmit()">Ma'lumotlar bazasiga yozish</button>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        function executeSubmit() {
+            const title = document.getElementById('title').value.trim();
+            const category = document.getElementById('category').value;
+            const amount = document.getElementById('amount').value.trim();
+            const bank_account = document.getElementById('bank_account').value;
+            const description = document.getElementById('description').value.trim();
+
+            if (!title || !amount) {
+                alert("Xatolik: Majburiy maydonlarni to'ldiring!");
+                return;
+            }
+
+            const dataPackage = {
+                title: title,
+                category: category,
+                amount: parseFloat(amount),
+                bank_account: bank_account,
+                description: description
+            };
+
+            tg.sendData(JSON.stringify(dataPackage));
+            tg.close();
+        }
+    </script>
+</body>
+</html>
+
